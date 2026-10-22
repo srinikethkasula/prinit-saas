@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -13,11 +12,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
           {/* Brand */}
           <div className="sm:col-span-2 space-y-4">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/prinit-logo.webp"
               alt="Prinit"
-              width={170}
-              height={57}
               className="h-10 md:h-12 w-auto object-contain"
               style={{ mixBlendMode: "multiply" }}
             />

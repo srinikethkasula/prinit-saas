@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -30,14 +29,12 @@ export default function Navbar() {
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
         {/* Logo */}
         <Link href="/" className="flex items-center group flex-shrink-0" onClick={() => setMobileOpen(false)}>
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/prinit-logo.webp"
             alt="Prinit"
-            width={200}
-            height={66}
             className="h-10 sm:h-12 lg:h-14 w-auto object-contain group-hover:opacity-85 transition-opacity duration-200"
             style={{ mixBlendMode: "multiply" }}
-            priority
           />
         </Link>
 
