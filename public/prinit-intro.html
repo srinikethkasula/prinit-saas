@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prinit — WhatsApp Print Software</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0B2347;
+    --pink: #FF3B7A;
+    --green: #25D366;
+    --cyan: #00AEEF;
+    --gray: #6B7280;
+    --light: #F8FAFB;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--navy);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0B2347 0%, #112d5a 100%);
+    padding: 60px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,59,122,0.12);
+    filter: blur(60px);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(0,174,239,0.10);
+    filter: blur(50px);
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--pink);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: #fff;
+    letter-spacing: -1px;
+  }
+  .logo-name {
+    font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
+  }
+  .eyebrow-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    max-width: 600px;
+    margin: 0 auto 20px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 span { color: var(--pink); }
+
+  .hero p {
+    font-size: clamp(15px, 2.5vw, 18px);
+    color: rgba(255,255,255,0.65);
+    max-width: 500px;
+    margin: 0 auto 36px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    position: relative; z-index: 1;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    transition: opacity .2s;
+  }
+  .btn-primary:hover { opacity: 0.92; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    transition: background .2s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+
+  .wa-dot {
+    width: 22px; height: 22px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── FLOW STRIP ── */
+  .flow {
+    background: var(--light);
+    padding: 32px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px 24px;
+    border-top: 1px solid #E5E7EB;
+    border-bottom: 1px solid #E5E7EB;
+    text-align: center;
+  }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .flow-icon {
+    width: 36px; height: 36px;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .flow-arrow {
+    font-size: 18px;
+    color: var(--pink);
+    font-weight: 700;
+  }
+
+  /* ── SECTION BASE ── */
+  .section {
+    padding: 56px 24px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .section-center { text-align: center; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--pink);
+    margin-bottom: 12px;
+  }
+  .tag::before {
+    content: "";
+    display: block;
+    width: 16px; height: 2px;
+    background: var(--pink);
+    border-radius: 2px;
+  }
+
+  .section h2 {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .section > p, .section-center > p {
+    color: var(--gray);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto 36px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .steps { display: flex; flex-direction: column; gap: 20px; }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--light);
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .step-num {
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+  }
+  .step-body h3 {
+    font-size: 15px; font-weight: 700; margin-bottom: 4px;
+  }
+  .step-body p {
+    font-size: 13px; color: var(--gray); margin: 0; line-height: 1.5;
+  }
+
+  /* ── FEATURES GRID ── */
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 500px) { .features { grid-template-columns: 1fr; } }
+
+  .feature {
+    background: var(--light);
+    border: 1px solid #E5E7EB;
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .feature-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .feature h4 {
+    font-size: 13px; font-weight: 700; margin-bottom: 4px;
+  }
+  .feature p {
+    font-size: 12px; color: var(--gray); margin: 0; line-height: 1.5;
+  }
+
+  /* ── WHO FOR ── */
+  .who-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .who-card {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid;
+  }
+  .who-card.shops   { background: #EFF6FF; border-color: #BFDBFE; }
+  .who-card.campus  { background: #FFF0F6; border-color: #FECDD3; }
+  .who-card.offices { background: #F0FFFE; border-color: #A5F3FC; }
+
+  .who-emoji {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .who-card h3 {
+    font-size: 14px; font-weight: 800; margin-bottom: 4px;
+  }
+  .who-card p {
+    font-size: 12px; color: var(--gray); margin: 0; line-height: 1.5;
+  }
+
+  /* ── STATS ── */
+  .stats-section {
+    background: var(--navy);
+    padding: 48px 24px;
+    text-align: center;
+  }
+  .stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px 60px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .stat-val {
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .stat-val span { color: var(--pink); }
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* ── CTA BOTTOM ── */
+  .cta-bottom {
+    background: linear-gradient(135deg, #0B2347 0%, #112d5a 100%);
+    padding: 60px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-bottom::before {
+    content: "";
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .cta-bottom h2 {
+    font-size: clamp(24px, 5vw, 38px);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+  }
+  .cta-bottom p {
+    color: rgba(255,255,255,0.6);
+    font-size: 15px;
+    max-width: 440px;
+    margin: 0 auto 32px;
+    position: relative; z-index: 1;
+  }
+  .cta-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    position: relative; z-index: 1;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 24px;
+    text-align: center;
+    border-top: 1px solid #E5E7EB;
+    font-size: 12px;
+    color: var(--gray);
+  }
+  footer strong { color: var(--navy); }
+
+  /* ── WA SVG ── */
+  .wa-svg { width: 12px; height: 12px; fill: white; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="logo">
+    <div class="logo-mark">P</div>
+    <div class="logo-name">Prinit</div>
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-dot"></span>
+    Print Management Software · Windows
+  </div>
+  <h1>Your printer accepts orders<br /><span>via WhatsApp.</span></h1>
+  <p>Install once. Customers anywhere in the world send files on WhatsApp — Prinit auto-processes and prints them. No manual work, no counter queues.</p>
+  <div class="hero-ctas">
+    <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%27d%20like%20to%20book%20a%20demo" class="btn-primary">
+      📅 Book a Demo
+    </a>
+    <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%20want%20to%20know%20more" class="btn-secondary">
+      <span class="wa-dot">
+        <svg class="wa-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </span>
+      Chat on WhatsApp
+    </a>
+  </div>
+</header>
+
+<!-- FLOW STRIP -->
+<div class="flow">
+  <div class="flow-step">
+    <div class="flow-icon">📱</div>
+    Customer sends file on WhatsApp
+  </div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step">
+    <div class="flow-icon">⚡</div>
+    Prinit auto-processes
+  </div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step">
+    <div class="flow-icon">🖨️</div>
+    Printer starts in seconds
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section section-center">
+  <div class="tag">Setup</div>
+  <h2>Up and running in 3 steps</h2>
+  <p>No IT team, no cloud server, no config files. Runs entirely on your Windows machine.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <h3>Download &amp; install on Windows</h3>
+        <p>Takes under 5 minutes. No subscriptions to configure. No server to maintain.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <h3>Connect your printers</h3>
+        <p>USB, network, or wireless — add any printer. Route B&amp;W jobs to one machine, colour to another.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <h3>Go live — receive jobs globally</h3>
+        <p>Share your WhatsApp number. Customers anywhere in the world send files. Prinit prints them automatically.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div style="background: var(--light); padding: 0 0 8px;">
+  <div class="section section-center">
+    <div class="tag">Features</div>
+    <h2>Everything in one install</h2>
+    <p>No plugins, no add-ons, no per-feature pricing. Ships complete.</p>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h4>Auto-print on receipt</h4>
+        <p>Job arrives on WhatsApp → processed → printed. Zero clicks from you.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🖨️</div>
+        <h4>Multi-printer support</h4>
+        <p>Connect USB, network, or wireless printers. Route by job type.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <h4>Live dashboard</h4>
+        <p>Real-time queue with status, sender, filename, and page count.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📁</div>
+        <h4>All major formats</h4>
+        <p>PDF, DOCX, PPTX, XLSX, JPEG, PNG — auto-converted before printing.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔐</div>
+        <h4>OTP mode for cash</h4>
+        <p>Cash customers get a one-time code via WhatsApp. Show OTP to collect prints.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💰</div>
+        <h4>Custom pricing control</h4>
+        <p>Set your own per-page rates for B&amp;W, colour, and paper sizes.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💬</div>
+        <h4>Auto customer updates</h4>
+        <p>Prinit replies on WhatsApp: received → printing → ready for pickup.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🌐</div>
+        <h4>Global reach</h4>
+        <p>Accept jobs from any phone number — India, UK, US, anywhere.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHO FOR -->
+<div class="section section-center">
+  <div class="tag">Who it's for</div>
+  <h2>One software. Three workflows.</h2>
+  <p>The same install powers print shops, campuses, and offices.</p>
+  <div class="who-grid">
+    <div class="who-card shops">
+      <div class="who-emoji">🖨️</div>
+      <div>
+        <h3>Print Shop Owners</h3>
+        <p>New jobs arrive on WhatsApp while you work on existing ones. No counter queues, no phone calls — a steady stream of print-ready files and idle printer time converted to revenue.</p>
+      </div>
+    </div>
+    <div class="who-card campus">
+      <div class="who-emoji">🎓</div>
+      <div>
+        <h3>Colleges &amp; Institutes</h3>
+        <p>Students send files from dorm, library, or canteen via WhatsApp. Prints are ready by the time they walk in. No queues, no waiting, no toner headaches for admin.</p>
+      </div>
+    </div>
+    <div class="who-card offices">
+      <div class="who-emoji">🏢</div>
+      <div>
+        <h3>Offices &amp; Co-working</h3>
+        <p>Remote or travelling employees WhatsApp documents to the office printer. Finance, HR, and ops teams stop waiting for someone to be physically present.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div>
+      <div class="stat-val">&lt;<span>30s</span></div>
+      <div class="stat-label">average job processing time</div>
+    </div>
+    <div>
+      <div class="stat-val"><span>100%</span></div>
+      <div class="stat-label">jobs auto-queued, zero manual intake</div>
+    </div>
+    <div>
+      <div class="stat-val"><span>0</span></div>
+      <div class="stat-label">manual steps on your end</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BOTTOM -->
+<div class="cta-bottom">
+  <h2>See Prinit in action</h2>
+  <p>Book a 15-minute demo. We'll walk through setup, show the dashboard, and answer every question before you install anything.</p>
+  <div class="cta-btns">
+    <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%27d%20like%20to%20book%20a%20demo" class="btn-primary">
+      📅 Book a Demo
+    </a>
+    <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%20want%20to%20know%20more" class="btn-secondary">
+      <span class="wa-dot">
+        <svg class="wa-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </span>
+      Chat on WhatsApp
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Prinit</strong> · WhatsApp Print Software · Windows · Mumbai &amp; beyond<br />
+  <span style="margin-top:6px; display:block;">
+    <a href="mailto:hiprinit@gmail.com" style="color: var(--pink);">hiprinit@gmail.com</a>
+    &nbsp;·&nbsp;
+    <a href="https://prinit.io" style="color: var(--gray);">prinit.io</a>
+  </span>
+</footer>
+
+</body>
+</html>

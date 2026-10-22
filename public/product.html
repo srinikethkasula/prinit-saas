@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prinit Software — WhatsApp-to-Print Platform</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0B2347;
+  --pink: #FF3B7A;
+  --green: #25D366;
+  --cyan: #00AEEF;
+  --gray: #6B7280;
+  --light: #F8FAFB;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--navy);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── NAVBAR ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 20px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px;
+}
+.nav-logo-mark {
+  width: 32px; height: 32px;
+  background: var(--pink);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: #fff;
+}
+.nav-links {
+  display: flex; gap: 28px; align-items: center;
+  font-size: 14px; font-weight: 500; color: var(--gray);
+}
+.nav-links a:hover { color: var(--navy); }
+.nav-cta {
+  background: var(--navy); color: #fff;
+  font-size: 13px; font-weight: 700;
+  padding: 9px 20px; border-radius: 999px;
+  transition: opacity .2s;
+}
+.nav-cta:hover { opacity: .85; }
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 92vh;
+  display: flex; align-items: center;
+  position: relative;
+  overflow: hidden;
+  background: #fafafa;
+  padding: 80px 24px 60px;
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 55% 50% at 8% 65%, rgba(11,35,71,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 92% 20%, rgba(255,59,122,0.04) 0%, transparent 55%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 1152px; margin: 0 auto; width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  position: relative; z-index: 1;
+}
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero { min-height: auto; padding: 80px 20px 48px; }
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(11,35,71,0.06);
+  border: 1px solid rgba(11,35,71,0.12);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+  margin-bottom: 24px;
+}
+.hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--navy); }
+
+.hero h1 {
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 800; letter-spacing: -1.5px; line-height: 1.08;
+  margin-bottom: 20px;
+}
+.hero h1 .pink { color: var(--pink); }
+
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--gray);
+  line-height: 1.65;
+  max-width: 420px;
+  margin-bottom: 32px;
+}
+
+.hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+
+.btn-dark {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--navy); color: #fff;
+  font-size: 15px; font-weight: 700;
+  padding: 14px 28px; border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(11,35,71,0.2);
+  transition: opacity .2s;
+}
+.btn-dark:hover { opacity: .88; }
+
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid rgba(11,35,71,0.2); color: var(--navy);
+  font-size: 15px; font-weight: 600;
+  padding: 13px 28px; border-radius: 999px;
+  transition: background .2s;
+}
+.btn-outline:hover { background: rgba(11,35,71,0.04); }
+
+.wa-pill {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.wa-pill svg { width: 12px; height: 12px; fill: white; }
+
+.hero-stats {
+  display: flex; flex-wrap: wrap; gap: 24px;
+  padding-top: 28px;
+  border-top: 1px solid #E5E7EB;
+}
+.hero-stat-v { font-size: 13px; font-weight: 800; color: var(--navy); }
+.hero-stat-l { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* ── DASHBOARD MOCKUP ── */
+.mockup-wrap {
+  position: relative;
+}
+
+.dashboard {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 24px 64px rgba(11,35,71,0.12), 0 8px 24px rgba(0,0,0,0.06);
+  overflow: hidden;
+  font-size: 11px;
+}
+
+.dash-chrome {
+  background: #F5F5F5;
+  border-bottom: 1px solid #E0E0E0;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.chrome-dot { width: 12px; height: 12px; border-radius: 50%; }
+.chrome-dot.red { background: #FF5F57; }
+.chrome-dot.yellow { background: #FFBD2E; }
+.chrome-dot.green { background: #28C840; }
+.chrome-title {
+  flex: 1; text-align: center;
+  font-size: 11px; font-weight: 600; color: #888;
+  letter-spacing: 0.02em;
+}
+
+.dash-body {
+  display: flex;
+  height: 320px;
+}
+
+.dash-sidebar {
+  width: 48px;
+  background: var(--navy);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 14px 0;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.sidebar-logo {
+  width: 28px; height: 28px;
+  background: var(--pink);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900; color: #fff;
+  margin-bottom: 4px;
+}
+.sidebar-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.4);
+}
+.sidebar-icon.active {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+.sidebar-icon svg { width: 16px; height: 16px; }
+
+.dash-main {
+  flex: 1;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.dash-topbar {
+  padding: 10px 14px;
+  border-bottom: 1px solid #F0F0F0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-topbar-title { font-size: 12px; font-weight: 700; color: var(--navy); }
+.dash-topbar-status {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; color: #16A34A;
+}
+.status-dot-live {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #16A34A;
+  animation: pulse-green 2s infinite;
+}
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.dash-stats {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #F5F5F5;
+}
+.dash-stat-card {
+  background: var(--light);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.dash-stat-label { font-size: 9px; color: var(--gray); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.dash-stat-value { font-size: 16px; font-weight: 800; color: var(--navy); margin-top: 2px; }
+
+.dash-jobs { flex: 1; overflow: hidden; }
+.dash-jobs-header {
+  padding: 8px 12px 4px;
+  font-size: 9px; font-weight: 700; color: var(--gray);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.dash-job-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px;
+  border-bottom: 1px solid #F9F9F9;
+}
+.job-wa {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.job-wa svg { width: 11px; height: 11px; fill: white; }
+.job-info { flex: 1; min-width: 0; }
+.job-name { font-size: 10px; font-weight: 700; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.job-meta { font-size: 9px; color: var(--gray); margin-top: 1px; }
+.job-badge {
+  font-size: 8px; font-weight: 700; padding: 2px 7px;
+  border-radius: 999px; flex-shrink: 0;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.badge-printing { background: rgba(11,35,71,0.08); color: var(--navy); animation: pulse-badge 1.5s infinite; }
+.badge-queued   { background: rgba(255,189,46,0.15); color: #B45309; }
+.badge-done     { background: rgba(22,163,74,0.1); color: #15803D; }
+.badge-received { background: rgba(0,174,239,0.12); color: #0369A1; }
+@keyframes pulse-badge { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+/* floating badge */
+.float-badge {
+  position: absolute;
+  left: -16px; bottom: 32px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex; align-items: center; gap: 8px;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
+}
+.float-badge-new { font-size: 8px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; }
+.float-badge-name { font-size: 11px; font-weight: 700; color: var(--navy); margin-top: 1px; }
+@media (max-width: 640px) { .float-badge { display: none; } }
+
+/* ── SECTION COMMON ── */
+.section {
+  padding: 80px 24px;
+  max-width: 1152px;
+  margin: 0 auto;
+}
+.section-center { text-align: center; }
+
+.eyebrow-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,59,122,0.06);
+  border: 1px solid rgba(255,59,122,0.12);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+  margin-bottom: 20px;
+}
+.eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); }
+
+.section h2 {
+  font-size: clamp(26px, 4vw, 42px);
+  font-weight: 800; letter-spacing: -1px; line-height: 1.15;
+  margin-bottom: 14px;
+}
+.section-sub {
+  font-size: clamp(14px, 2vw, 17px);
+  color: var(--gray);
+  max-width: 520px;
+  margin: 0 auto 48px;
+  line-height: 1.65;
+}
+
+/* ── ANIMATION SECTION ── */
+.anim-section {
+  padding: 48px 24px;
+  background: #fff;
+}
+.anim-inner {
+  max-width: 1152px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 48px; align-items: center;
+}
+.anim-text { flex: 1; min-width: 260px; }
+.anim-text h2 {
+  font-size: clamp(24px, 3.5vw, 36px);
+  font-weight: 800; letter-spacing: -1px; line-height: 1.18;
+  margin-bottom: 14px;
+}
+.anim-text h2 .pink { color: var(--pink); }
+.anim-text p { font-size: 14px; color: var(--gray); line-height: 1.65; max-width: 340px; }
+.anim-stats { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 24px; }
+.anim-stat-v { font-size: 18px; font-weight: 800; color: var(--navy); }
+.anim-stat-l { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.anim-svg-wrap { flex: 1; min-width: 260px; display: flex; justify-content: center; }
+
+/* ── WA→PRINTER SVG ANIMATION ── */
+.anim-svg { width: 100%; max-width: 380px; height: 220px; }
+.anim-track { fill: none; stroke: #E5E7EB; stroke-width: 1.5; stroke-dasharray: 6 4; }
+.anim-orb {
+  r: 8;
+  fill: var(--pink);
+}
+
+/* ── HOW IT WORKS ── */
+.steps-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  position: relative;
+}
+@media (max-width: 700px) { .steps-grid { grid-template-columns: 1fr; } }
+.step-connector {
+  display: none;
+  position: absolute;
+  top: 56px;
+  left: calc(16.66% + 28px);
+  right: calc(16.66% + 28px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(11,35,71,0.1), rgba(255,59,122,0.3), rgba(11,35,71,0.1));
+}
+@media (min-width: 700px) { .step-connector { display: block; } }
+
+.step-card {
+  background: #fff; border: 1px solid #E5E7EB;
+  border-radius: 18px; padding: 28px 24px;
+  transition: box-shadow .25s, border-color .25s;
+}
+.step-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.07); border-color: rgba(11,35,71,0.12); }
+.step-icon-wrap {
+  width: 52px; height: 52px;
+  background: rgba(11,35,71,0.05);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--navy);
+  margin-bottom: 18px;
+}
+.step-icon-wrap svg { width: 26px; height: 26px; }
+.step-num { font-size: 11px; font-weight: 800; color: var(--pink); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.step-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.step-card p { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+/* ── FEATURES ── */
+.features-section { background: var(--light); padding: 80px 0; }
+.features-inner { max-width: 1152px; margin: 0 auto; padding: 0 24px; }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+@media (max-width: 900px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .features-grid { grid-template-columns: 1fr; } }
+
+.feat-card {
+  background: #fff; border: 1px solid #E5E7EB;
+  border-radius: 18px; padding: 20px;
+  transition: border-color .25s, box-shadow .25s;
+}
+.feat-card:hover { border-color: rgba(11,35,71,0.18); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+.feat-icon-wrap {
+  width: 42px; height: 42px;
+  background: rgba(11,35,71,0.05);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--navy);
+  margin-bottom: 14px;
+}
+.feat-icon-wrap svg { width: 22px; height: 22px; }
+.feat-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.feat-card p { font-size: 11px; color: var(--gray); line-height: 1.6; }
+
+/* ── WHO FOR ── */
+.who-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+@media (max-width: 720px) { .who-grid { grid-template-columns: 1fr; } }
+
+.who-card {
+  border-radius: 20px; border: 1px solid; padding: 28px 24px;
+  transition: box-shadow .25s;
+}
+.who-card:hover { box-shadow: 0 10px 32px rgba(0,0,0,0.08); }
+.who-card.shops   { background: linear-gradient(135deg,#EFF6FF,#E0F2FE); border-color: #BFDBFE; }
+.who-card.campus  { background: linear-gradient(135deg,#FFF0F6,#FFF1F2); border-color: #FECDD3; }
+.who-card.offices { background: linear-gradient(135deg,#F0FFFE,#ECFDF5); border-color: #A7F3D0; }
+
+.who-icon-wrap {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+  font-size: 26px;
+}
+.who-card.shops   .who-icon-wrap { background: rgba(11,35,71,0.08); }
+.who-card.campus  .who-icon-wrap { background: rgba(255,59,122,0.1); }
+.who-card.offices .who-icon-wrap { background: rgba(0,174,239,0.1); }
+
+.who-tag {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.08em; margin-bottom: 6px;
+}
+.who-card.shops   .who-tag { color: var(--navy); }
+.who-card.campus  .who-tag { color: var(--pink); }
+.who-card.offices .who-tag { color: var(--cyan); }
+
+.who-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 10px; }
+.who-card p  { font-size: 13px; color: var(--gray); line-height: 1.65; margin-bottom: 16px; }
+
+.who-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.who-list li {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 12px; color: #374151;
+}
+.check-icon { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+.who-card.shops   .check-icon { color: var(--navy); }
+.who-card.campus  .check-icon { color: var(--pink); }
+.who-card.offices .check-icon { color: var(--cyan); }
+
+/* ── CTA ── */
+.cta-section {
+  padding: 80px 24px;
+  background: #fff;
+}
+.cta-box {
+  max-width: 1152px; margin: 0 auto;
+  background: var(--navy);
+  border-radius: 28px;
+  padding: 64px 48px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+@media (max-width: 600px) { .cta-box { padding: 48px 24px; border-radius: 20px; } }
+.cta-box::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.cta-glow-1 {
+  position: absolute; top: -60px; right: -60px;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: var(--pink); opacity: 0.1; filter: blur(60px);
+}
+.cta-glow-2 {
+  position: absolute; bottom: -40px; left: -40px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: var(--cyan); opacity: 0.08; filter: blur(50px);
+}
+.cta-inner { position: relative; z-index: 1; }
+.cta-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 999px; padding: 6px 16px;
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8);
+  margin-bottom: 24px;
+}
+.cta-box h2 {
+  font-size: clamp(26px, 4vw, 42px);
+  font-weight: 800; color: #fff; letter-spacing: -1px;
+  margin-bottom: 14px; max-width: 520px; margin-left: auto; margin-right: auto;
+}
+.cta-box p {
+  font-size: 16px; color: rgba(255,255,255,0.6);
+  max-width: 440px; margin: 0 auto 36px; line-height: 1.65;
+}
+.cta-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.btn-white {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; color: var(--navy);
+  font-size: 15px; font-weight: 700;
+  padding: 14px 28px; border-radius: 999px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+  transition: opacity .2s;
+}
+.btn-white:hover { opacity: .92; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid rgba(255,255,255,0.2); color: #fff;
+  font-size: 15px; font-weight: 600;
+  padding: 13px 28px; border-radius: 999px;
+  transition: background .2s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.08); }
+.cta-email { margin-top: 24px; font-size: 13px; color: rgba(255,255,255,0.4); }
+.cta-email a { color: rgba(255,255,255,0.7); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy);
+  padding: 40px 24px 32px;
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+}
+.footer-inner {
+  max-width: 1152px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 20px;
+  justify-content: space-between; align-items: center;
+}
+.footer-logo { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 800; font-size: 18px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
+.footer-links a { color: rgba(255,255,255,0.5); }
+.footer-links a:hover { color: #fff; }
+.footer-copy { width: 100%; text-align: center; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">P</div>
+    Prinit
+  </a>
+  <div class="nav-links">
+    <a href="#product-how">How it works</a>
+    <a href="#product-features">Features</a>
+    <a href="#product-who">Who it's for</a>
+  </div>
+  <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%27d%20like%20to%20book%20a%20demo" class="nav-cta btn-dark" style="padding:9px 20px;font-size:13px;">Book a Demo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <!-- LEFT -->
+    <div>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Print Management Software
+      </div>
+      <h1>Any printer.<br /><span class="pink">Any file.</span><br />Via WhatsApp.</h1>
+      <p class="hero-sub">Install Prinit on Windows. Connect your printer. Customers anywhere in the world send files via WhatsApp — Prinit auto-processes and prints them. No manual work.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%27d%20like%20to%20book%20a%20demo" class="btn-dark">Book a Demo</a>
+        <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%20want%20to%20know%20more" class="btn-outline">
+          <span class="wa-pill"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></span>
+          Enquire on WhatsApp
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-v">Windows</div><div class="hero-stat-l">compatible</div></div>
+        <div><div class="hero-stat-v">Any printer</div><div class="hero-stat-l">USB, network, wireless</div></div>
+        <div><div class="hero-stat-v">Global</div><div class="hero-stat-l">any WhatsApp number</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT — DASHBOARD MOCKUP -->
+    <div class="mockup-wrap">
+      <div class="dashboard">
+        <!-- Chrome bar -->
+        <div class="dash-chrome">
+          <span class="chrome-dot red"></span>
+          <span class="chrome-dot yellow"></span>
+          <span class="chrome-dot green"></span>
+          <span class="chrome-title">Prinit Dashboard</span>
+        </div>
+        <!-- Body -->
+        <div class="dash-body">
+          <!-- Sidebar -->
+          <div class="dash-sidebar">
+            <div class="sidebar-logo">P</div>
+            <div class="sidebar-icon active">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            </div>
+            <div class="sidebar-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            </div>
+            <div class="sidebar-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <div class="sidebar-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+          </div>
+          <!-- Main -->
+          <div class="dash-main">
+            <div class="dash-topbar">
+              <span class="dash-topbar-title">Print Jobs</span>
+              <span class="dash-topbar-status"><span class="status-dot-live"></span>Live</span>
+            </div>
+            <div class="dash-stats">
+              <div class="dash-stat-card"><div class="dash-stat-label">Jobs today</div><div class="dash-stat-value">47</div></div>
+              <div class="dash-stat-card"><div class="dash-stat-label">Pages</div><div class="dash-stat-value">312</div></div>
+              <div class="dash-stat-card"><div class="dash-stat-label">Printers</div><div class="dash-stat-value">3</div></div>
+            </div>
+            <div class="dash-jobs">
+              <div class="dash-jobs-header">Recent Jobs</div>
+              <div class="dash-job-row">
+                <div class="job-wa"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white"/></svg></div>
+                <div class="job-info"><div class="job-name">Thesis_Final.pdf</div><div class="job-meta">+91 98765 · 42 pages · B&W</div></div>
+                <span class="job-badge badge-printing">Printing</span>
+              </div>
+              <div class="dash-job-row">
+                <div class="job-wa"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white"/></svg></div>
+                <div class="job-info"><div class="job-name">Assignment_Q3.docx</div><div class="job-meta">+91 87654 · 8 pages · B&W</div></div>
+                <span class="job-badge badge-queued">Queued</span>
+              </div>
+              <div class="dash-job-row">
+                <div class="job-wa"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white"/></svg></div>
+                <div class="job-info"><div class="job-name">Brochure_colour.pdf</div><div class="job-meta">+44 79012 · 4 pages · Colour</div></div>
+                <span class="job-badge badge-done">Done</span>
+              </div>
+              <div class="dash-job-row">
+                <div class="job-wa"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white"/></svg></div>
+                <div class="job-info"><div class="job-name">Notes_Unit5.jpg</div><div class="job-meta">+91 99887 · 1 page · B&W</div></div>
+                <span class="job-badge badge-received">Received</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Floating badge -->
+      <div class="float-badge">
+        <div class="wa-pill"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></div>
+        <div>
+          <div class="float-badge-new">New job</div>
+          <div class="float-badge-name">Thesis_Final.pdf · 42p</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ANIMATION DEMO -->
+<section class="anim-section">
+  <div class="anim-inner">
+    <div class="anim-text">
+      <div class="eyebrow-tag"><span class="eyebrow-dot"></span> How jobs flow</div>
+      <h2>Customer sends a file.<br /><span class="pink">Printer starts immediately.</span></h2>
+      <p>No manual step on your end. Prinit receives the WhatsApp message, processes the file, and triggers your printer — all within seconds.</p>
+      <div class="anim-stats">
+        <div><div class="anim-stat-v">&lt; 30s</div><div class="anim-stat-l">avg processing time</div></div>
+        <div><div class="anim-stat-v">100%</div><div class="anim-stat-l">auto-queued</div></div>
+        <div><div class="anim-stat-v">0</div><div class="anim-stat-l">manual steps</div></div>
+      </div>
+    </div>
+    <div class="anim-svg-wrap">
+      <!-- WhatsApp → Printer SVG animation -->
+      <svg class="anim-svg" viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background circles -->
+        <circle cx="80" cy="110" r="52" fill="#25D366" opacity="0.08"/>
+        <circle cx="300" cy="110" r="52" fill="#0B2347" opacity="0.06"/>
+
+        <!-- Outer rings (pulse) -->
+        <circle cx="80" cy="110" r="64" fill="none" stroke="#25D366" stroke-width="1" opacity="0.15">
+          <animate attributeName="r" values="52;70;52" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.15;0;0.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="300" cy="110" r="64" fill="none" stroke="#0B2347" stroke-width="1" opacity="0.12">
+          <animate attributeName="r" values="52;70;52" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.12;0;0.12" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- WhatsApp circle -->
+        <circle cx="80" cy="110" r="40" fill="#25D366"/>
+        <!-- WA icon -->
+        <g transform="translate(62 92) scale(1.5)">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white" transform="scale(0.85)"/>
+        </g>
+
+        <!-- Printer circle -->
+        <circle cx="300" cy="110" r="40" fill="#0B2347"/>
+        <!-- Printer icon -->
+        <g transform="translate(278 88)" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+          <path d="M6 14h12v8H6z"/>
+          <path d="M6 4h2M6 6.5h4"/>
+          <circle cx="18" cy="13" r="1" fill="white" stroke="none"/>
+        </g>
+
+        <!-- Animated path -->
+        <path id="motionPath" class="anim-track" d="M 130 110 C 160 80, 220 80, 250 110"/>
+
+        <!-- Moving file orb -->
+        <g>
+          <circle r="9" fill="#FF3B7A">
+            <animateMotion dur="2s" repeatCount="indefinite" begin="0s">
+              <mpath href="#motionPath"/>
+            </animateMotion>
+          </circle>
+          <!-- file icon on orb -->
+          <g>
+            <animateMotion dur="2s" repeatCount="indefinite" begin="0s">
+              <mpath href="#motionPath"/>
+            </animateMotion>
+            <rect x="-4" y="-5" width="7" height="9" rx="1" fill="white" opacity="0.9"/>
+            <line x1="-3" y1="-3" x2="2" y2="-3" stroke="#FF3B7A" stroke-width="0.8"/>
+            <line x1="-3" y1="-1" x2="2" y2="-1" stroke="#FF3B7A" stroke-width="0.8"/>
+            <line x1="-3" y1="1" x2="0" y2="1" stroke="#FF3B7A" stroke-width="0.8"/>
+          </g>
+        </g>
+
+        <!-- Labels -->
+        <text x="80" y="162" text-anchor="middle" font-size="11" font-weight="700" fill="#25D366">Customer</text>
+        <text x="300" y="162" text-anchor="middle" font-size="11" font-weight="700" fill="#0B2347">Your Printer</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-center" id="product-how">
+  <div class="eyebrow-tag"><span class="eyebrow-dot"></span> Setup in minutes</div>
+  <h2>Up and running in three steps</h2>
+  <p class="section-sub">No cloud dependencies. No subscriptions to configure. Runs entirely on your Windows machine.</p>
+
+  <div class="steps-grid">
+    <div class="step-connector"></div>
+    <div class="step-card">
+      <div class="step-icon-wrap">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      </div>
+      <div class="step-num">01</div>
+      <h3>Download &amp; install</h3>
+      <p>Install Prinit on Windows. Setup takes under 5 minutes. No IT team, no server, no configuration files.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-icon-wrap">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+      </div>
+      <div class="step-num">02</div>
+      <h3>Connect your printers</h3>
+      <p>Add USB, network, or wireless printers. Manage multiple machines, set defaults per job type.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-icon-wrap">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div class="step-num">03</div>
+      <h3>Go live — receive jobs globally</h3>
+      <p>Share your WhatsApp number. Customers send files from anywhere. Prinit receives, processes, and prints automatically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="product-features">
+  <div class="features-inner">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div class="eyebrow-tag"><span class="eyebrow-dot"></span> Everything included</div>
+      <h2>Built for real print workflows</h2>
+      <p class="section-sub" style="margin-bottom:0">Every feature ships with the software. No plugins, no add-ons.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+        <h4>Auto-print on receipt</h4>
+        <p>Job arrives on WhatsApp → processed → printed. Zero clicks from you.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></div>
+        <h4>Multi-printer support</h4>
+        <p>USB, network, wireless. Route B&amp;W to one machine, colour to another.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h4>Global WhatsApp reach</h4>
+        <p>Accept jobs from any phone number — India, UK, US, anywhere.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
+        <h4>Live dashboard</h4>
+        <p>Real-time queue — status, sender, filename, page count. Full visibility.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+        <h4>All major formats</h4>
+        <p>PDF, DOCX, PPTX, XLSX, JPEG, PNG — auto-converted before printing.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
+        <h4>Per-job print settings</h4>
+        <p>B&amp;W or colour, single/double-sided, A4 or A3 — global defaults or per job.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+        <h4>OTP mode for cash</h4>
+        <p>Cash customers get a one-time code via WhatsApp. Show OTP to collect prints.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h4>Custom pricing control</h4>
+        <p>Set your own per-page rates for B&amp;W, colour, and paper sizes.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div>
+        <h4>Auto customer updates</h4>
+        <p>Prinit replies on WhatsApp: received → printing → ready for pickup.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+        <h4>History &amp; analytics</h4>
+        <p>Daily and monthly job reports. Filter by printer, file type, or sender.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO FOR -->
+<section class="section section-center" id="product-who">
+  <div class="eyebrow-tag"><span class="eyebrow-dot"></span> Who it's built for</div>
+  <h2>One software. Three workflows.</h2>
+  <p class="section-sub">The same install powers print shops, campuses, and offices — each with their own operating model.</p>
+
+  <div class="who-grid">
+    <div class="who-card shops">
+      <div class="who-icon-wrap">🖨️</div>
+      <div class="who-tag">Print Shops</div>
+      <h3>Turn idle time into income</h3>
+      <p>New jobs arrive on WhatsApp while you work on existing ones. No counter queues, no phone calls — a steady stream of print-ready files.</p>
+      <ul class="who-list">
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Jobs auto-queue — no manual intake</li>
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Handle 3× more volume without extra staff</li>
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Accept orders from customers across the city</li>
+      </ul>
+    </div>
+
+    <div class="who-card campus">
+      <div class="who-icon-wrap">🎓</div>
+      <div class="who-tag">Campus Print Centres</div>
+      <h3>Students print from anywhere</h3>
+      <p>Dorm room, library, canteen — students send files via WhatsApp. Prints are ready by the time they walk in. No queues, no waiting.</p>
+      <ul class="who-list">
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Zero walk-in queue for routine jobs</li>
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Students send from any device</li>
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Staff focus on complex jobs only</li>
+      </ul>
+    </div>
+
+    <div class="who-card offices">
+      <div class="who-icon-wrap">🏢</div>
+      <div class="who-tag">Offices &amp; Co-working</div>
+      <h3>Print from home to the office</h3>
+      <p>Remote, hybrid, or travelling — employees WhatsApp documents to the office printer. Finance, HR, and ops stop waiting for someone to be present.</p>
+      <ul class="who-list">
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>WFH employees print to office with one message</li>
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>No VPN, no drivers, no email chains</li>
+        <li><svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>One Prinit install covers the whole floor</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-glow-1"></div>
+    <div class="cta-glow-2"></div>
+    <div class="cta-inner">
+      <div class="cta-badge"><span class="eyebrow-dot"></span> Software demo</div>
+      <h2>See Prinit in action</h2>
+      <p>Book a 15-minute demo. We'll show you the dashboard, walk through setup, and answer every question before you install anything.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%27d%20like%20to%20book%20a%20demo" class="btn-white">📅 Book a Demo</a>
+        <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Prinit%2C%20I%20want%20to%20know%20more" class="btn-ghost">
+          <span class="wa-pill"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></span>
+          Chat on WhatsApp
+        </a>
+      </div>
+      <p class="cta-email">Or email <a href="mailto:hiprinit@gmail.com">hiprinit@gmail.com</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="nav-logo-mark">P</div>
+      Prinit
+    </div>
+    <div class="footer-links">
+      <a href="#product-how">How it works</a>
+      <a href="#product-features">Features</a>
+      <a href="#product-who">Who it's for</a>
+      <a href="mailto:hiprinit@gmail.com">hiprinit@gmail.com</a>
+      <a href="https://prinit.io">prinit.io</a>
+    </div>
+    <div class="footer-copy">
+      © 2025 Prinit · WhatsApp Print Management Software · Windows · Mumbai, India
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
